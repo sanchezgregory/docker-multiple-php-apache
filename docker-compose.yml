@@ -1,0 +1,69 @@
+services:
+  phpserver83:
+    build:
+      context: ./
+      dockerfile: ./configs/php8.3/Dockerfile
+    container_name: phpserver83
+    restart: always
+    ports:
+      - 8083:80
+    volumes:
+      - ./html/php83:/var/www/html
+      - ./configs/php8.3/php83.ini:/usr/local/etc/php/php.ini
+    networks:
+      - mysql-network
+    environment:
+      DB_HOST: mysql57
+      DB_USER: admin
+      DB_PASSWORD: password
+      DB_NAME: mysql57
+      
+  phpserver80:
+    build:
+      context: ./
+      dockerfile: ./configs/php8.0/Dockerfile
+    container_name: phpserver80
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ./html/php80:/var/www/html
+      - ./configs/php8.0/php80.ini:/usr/local/etc/php/php.ini
+    networks:
+      - mysql-network
+    environment:
+      DB_HOST: mysql80
+      DB_USER: admin
+      DB_PASSWORD: password
+      DB_NAME: mysql80
+      
+  phpserver74:
+    build:
+      context: ./
+      dockerfile: ./configs/php7.4/Dockerfile
+    container_name: phpserver74
+    restart: always
+    ports:
+      - 8074:80
+      - 9003:9003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./html/php74:/var/www/html
+      - ./configs/php7.4/php74.ini:/usr/local/etc/php/php.ini
+      - ./configs/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    networks:
+      - mysql-network
+    environment:
+      DB_HOST: mysql57
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: mysql57
+      
+volumes:
+  html: {}
+  configs: {}
+  
+networks:
+  mysql-network:
+    external: true
